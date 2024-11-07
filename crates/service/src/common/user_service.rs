@@ -6,9 +6,8 @@ use crate::utils::DbResult;
 use sea_orm::entity::prelude::*;
 use sea_orm::prelude::Uuid;
 use sea_orm::*;
-use std::sync::Arc;
-
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
 #[derive(FromQueryResult, DerivePartialModel, Serialize)]
 #[sea_orm(entity = "Users")]
@@ -21,9 +20,10 @@ pub struct PartialUser {
     pub avatar: Option<String>,
     pub default_team_id: Option<Uuid>,
     pub status: Status,
-    #[sea_orm(from_expr = Expr::cust("to_char(created_at, 'YYYY-MM-DD')"))]
-    pub created_at: DateTime,
-    pub updated_at: DateTime,
+    #[sea_orm(from_expr = "Expr::cust(\"to_char(users.created_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    pub created_at: Option<String>,
+    #[sea_orm(from_expr = "Expr::cust(\"to_char(users.updated_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    pub updated_at: Option<String>,
 }
 
 pub type ModelResult = DbResult<users::Model>;
@@ -57,10 +57,6 @@ impl UserService {
 
     pub async fn find_user_all(&self) -> DbResult<Vec<PartialUser>> {
         Users::find()
-            .column_as(
-                Expr::cust("to_char(users.created_at, 'YYYY-MM-DD')"),
-                "formatted_created_at",
-            )
             .into_partial_model::<PartialUser>()
             .all(self.db.as_ref())
             .await

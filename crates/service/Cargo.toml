@@ -11,6 +11,7 @@ sha2 = "0.10.8"
 jwt = "0.16.0"
 bcrypt = "0.15.1"
 rand = "0.8.5"
+log = "0.4.22"
 
 [dependencies.sea-orm]
 version = "1.1.0"

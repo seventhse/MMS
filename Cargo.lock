@@ -2896,6 +2896,7 @@ dependencies = [
  "bcrypt",
  "hmac",
  "jwt",
+ "log",
  "rand",
  "sea-orm",
  "serde",

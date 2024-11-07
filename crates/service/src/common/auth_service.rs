@@ -67,6 +67,8 @@ impl AuthService {
             .try_into_model()
             .unwrap();
 
+        // TODO: Send email verify code
+
         let expire = std::env::var("JWT_EXIPRE")
             .map(|v| v.parse::<i64>().unwrap_or(1000 * 60 * 10))
             .unwrap_or(1000 * 60 * 10);
@@ -133,7 +135,11 @@ impl AuthService {
 
     pub async fn reset_token_by_jwt(&self, token: &str) -> AuthResponse {
         let info = Jwt::extract_info(token).unwrap();
-        let token = Jwt::sign(info.clone()).unwrap();
+        let token = Jwt::sign(TokenPayload {
+            user_id: info.user_id,
+            expire: info.expire.clone(),
+        })
+        .unwrap();
 
         AuthResponse {
             token,
