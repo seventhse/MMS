@@ -1,0 +1,3 @@
+{
+  "extends": "@mms/configs/tsconfig.base.json"
+}
