@@ -8,6 +8,7 @@ use sea_orm::prelude::Uuid;
 use sea_orm::*;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::time::Instant;
 
 #[derive(FromQueryResult, DerivePartialModel, Serialize)]
 #[sea_orm(entity = "Users")]
@@ -24,6 +25,14 @@ pub struct PartialUser {
     pub created_at: Option<String>,
     #[sea_orm(from_expr = "Expr::cust(\"to_char(users.updated_at, 'YYYY-MM-DD HH:mm:ss')\")")]
     pub updated_at: Option<String>,
+}
+
+#[derive(Debug, FromQueryResult, DerivePartialModel, Serialize)]
+#[sea_orm(entity = "Users")]
+pub struct VerifyUserModel {
+    pub user_id: Uuid,
+    pub email: String,
+    pub password: String,
 }
 
 pub type ModelResult = DbResult<users::Model>;
@@ -140,7 +149,7 @@ impl UserService {
             username: Set(Some(form_data.username)),
             display_name: Set(form_data.display_name),
             avatar: Set(form_data.avatar),
-            password: Set(PassVerify::encrypt_password(&form_data.password).unwrap()),
+            password: Set(PassVerify::encrypt_password(&form_data.password)),
             unique_id: Set(generator_unique_id(&form_data.email)),
             ..Default::default()
         }
@@ -158,7 +167,7 @@ impl UserService {
             .await?
             .ok_or(DbErr::Custom("Cannot find user by the email!".to_string()))?
             .into_active_model();
-        user.password = Set(PassVerify::encrypt_password(password).unwrap());
+        user.password = Set(PassVerify::encrypt_password(password));
         user.update(self.db.as_ref()).await
     }
 
@@ -209,19 +218,32 @@ impl UserService {
         &self,
         email: &str,
         password: &str,
-    ) -> DbResult<users::Model> {
+    ) -> DbResult<VerifyUserModel> {
         if password.trim().is_empty() {
             return Err(DbErr::Custom("Password cannot be empty".to_string()));
         }
 
-        let user = self
-            .find_user_by_email(email)
+        let user = Users::find()
+            .select_only()
+            .columns([
+                users::Column::UserId,
+                users::Column::Email,
+                users::Column::Password,
+            ])
+            .filter(users::Column::Email.eq(email))
+            .into_model::<VerifyUserModel>()
+            .one(self.db.as_ref())
             .await?
-            .ok_or(DbErr::Custom("Cannot find user by the email!".to_string()))?;
+            .ok_or(DbErr::Custom("Cannot find user by the email.".to_string()))?;
 
+        let start = Instant::now();
+        log::info!("Verify Password Start processing...");
         if PassVerify::verify_password(password, &user.password).is_err() {
             return Err(DbErr::Custom("Invalid password".to_string()));
         }
+
+        let duration = start.elapsed();
+        log::info!("Verify Password  Processing completed in {:?}", duration);
 
         Ok(user)
     }
