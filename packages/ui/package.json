@@ -1,27 +1,32 @@
 {
   "name": "@mms/ui",
+  "type": "module",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.ts",
-  "exports": {
-    "./theme": "./src/theme/"
-  },
+  "author": "Seventhse <season.sevent@icloud.com> (https://github.com/seventhse)",
+  "license": "MIT",
   "keywords": [
     "ui"
   ],
-  "author": "Seventhse <season.sevent@icloud.com> (https://github.com/seventhse)",
-  "license": "MIT",
+  "exports": {
+    "./theme": "./src/theme/"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
   "peerDependencies": {
     "@mms/utils": "*",
     "react": ">=18.0.0"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0"
   },
   "devDependencies": {
     "@mms/configs": "workspace:^",
     "eslint": "^9.14.0",
     "typescript": "^5.6.3"
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.1.0",
-    "class-variance-authority": "^0.7.0"
   }
 }

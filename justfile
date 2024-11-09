@@ -25,6 +25,15 @@ pre-server:
     just build
     ./target/release/backend
 
+web-dev:
+    pnpm -F frontend dev
+web-build:
+    pnpm -F frontend build
+lint:
+    pnpm -F "@mms/*" lint
+lint-fix:
+    pnpm -F "@mms/*" lint:fix
+
 clean-entity:
     rm -rf {{entity_dir}}
 

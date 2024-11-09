@@ -1,10 +1,8 @@
-import config from "./eslint.base"
+import config from "./eslint.base.js"
+import next from "@next/eslint-plugin-next"
 
-export default [
-  ...config,
-  {
-    extends: [
-      "plugin:@next/next/recommende"
-    ]
+export default config({
+  plugins: {
+    '@next': next
   }
-]
+})
