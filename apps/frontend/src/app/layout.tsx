@@ -1,4 +1,4 @@
-import "@mms/ui/global.css"
+import '@mms/ui/global.css'
 
 export default function RootLayout({
   children,
