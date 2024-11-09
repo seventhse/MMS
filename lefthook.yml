@@ -1,0 +1,23 @@
+# EXAMPLE USAGE:
+#
+#   Refer for explanation to following link:
+#   https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+#
+# pre-commit:
+#   parallel: true
+#   commands:
+#     just:
+#       glob: "*.{js,ts,jsx,tsx}"
+#       run: yarn eslint {staged_files}
+#   scripts:
+#     "hello.js":
+#       runner: node
+#     "any.go":
+#       runner: go run
+
+pre-commit:
+  parallel: true
+  commands:
+    just:
+      glob: "{packages,apps}/**/*.*"
+      run: lint-fix

@@ -16,6 +16,13 @@ install:
         echo "sea-orm-cli already installed."; \
     fi
 
+web-install:
+    pnpm install
+
+setup:
+    just install
+    just web-install
+
 server:
     cargo watch -x 'run --package backend'
 build:
