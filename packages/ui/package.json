@@ -2,16 +2,24 @@
   "name": "@mms/ui",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "Marketing monitor system frontend.",
   "author": "Seventhse <season.sevent@icloud.com> (https://github.com/seventhse)",
   "license": "MIT",
   "keywords": [
     "ui"
   ],
   "exports": {
-    "./theme": "./src/theme/"
+    ".": "./src/index.ts",
+    "./theme": "./src/theme/tailwind-theme.js",
+    "./global.css": "./src/theme/global.css"
   },
-  "main": "src/index.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "files": [
+    "README.md",
+    "src",
+    "tsconfig.json"
+  ],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

@@ -1,3 +1,14 @@
 {
-  "extends": "@mms/configs/tsconfig.base.json"
+  "extends": "@mms/configs/tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "react-jsx",
+    "noEmit": true // 不生成输出文件
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
