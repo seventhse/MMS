@@ -1,0 +1,22 @@
+{
+  "extends": "@mms/configs/tsconfig.next.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ]
+    },
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+}

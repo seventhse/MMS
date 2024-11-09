@@ -1,2 +1,28 @@
 /dist
 /target
+
+.env
+.DS_Store
+
+# PNPM
+.pnpm-store/
+node_modules/
+.pnpm-debug.log
+
+# Next.js
+.next/
+out/
+.vercel
+
+# Node.js
+package-lock.json
+pnpm-lock.yaml
+.pnp.*
+.npm
+.node_repl_history
+
+# IDE/Editors
+.idea/
+.vscode/
+*.swp
+*.swo

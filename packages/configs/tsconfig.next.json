@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "exclude": ["node_modules"]
+}
