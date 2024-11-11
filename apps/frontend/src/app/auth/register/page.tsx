@@ -3,6 +3,7 @@ import {
   Divider,
 } from '@mms/ui'
 import Link from 'next/link'
+import RegisterFrom from '~/components/auth/register-form'
 import { Routes } from '~/constants/routes'
 
 export default function RegisterPage() {
@@ -10,14 +11,16 @@ export default function RegisterPage() {
     <>
       <h3 className="text-2xl mb-6">Sign up to MMS</h3>
 
-      <Button variant="default" size="lg" className="w-full">
-        Sign up with Github
-      </Button>
+      <RegisterFrom />
 
       <Divider>Or</Divider>
 
-      <Button variant="outline" size="lg" className="w-full">
-        Continue with email
+      <Button
+        variant="outline"
+        size="lg"
+        className="w-full"
+      >
+        Sign up with Github
       </Button>
 
       <p className="px-8 text-center text-sm text-muted-foreground mt-6">

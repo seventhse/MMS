@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       </aside>
       <main className="flex-1 flex items-center justify-center">
-        <div className="w-[360px] -mt-32">
+        <div className="w-[95%] sm:w-[360px]">
           {children}
         </div>
       </main>
