@@ -24,7 +24,7 @@ setup:
     just web-install
 
 server:
-    cargo watch -x 'run --package backend'
+    cargo watch -w apps/backend -w crates -x 'run --package backend'
 build:
     cargo build --release --package backend
 
