@@ -21,7 +21,8 @@ pub(crate) fn init_routes(cfg: &mut web::ServiceConfig) {
             .service(info)
             .service(logout)
             .service(reset_token)
-            .service(update_info),
+            .service(update_info)
+            .service(check),
     );
 }
 
@@ -94,5 +95,39 @@ async fn update_info(
         .auth_service
         .update_user_by_token(token_str, payload.into_inner())
         .await;
+    handle_response_by_service(res)
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CheckUsernameQuery {
+    email: Option<String>,
+    username: Option<String>,
+}
+
+#[get("/check")]
+async fn check(
+    service: web::Data<Arc<Service>>,
+    query: web::Query<CheckUsernameQuery>,
+) -> impl Responder {
+    let payload = query.into_inner();
+    let res = match (payload.email, payload.username) {
+        (Some(email), Some(username)) => {
+            let email_exists = service
+                .user_service
+                .check_email_exist(&email)
+                .await
+                .unwrap_or(true);
+            let username_exists = service
+                .user_service
+                .check_username_exist(&username)
+                .await
+                .unwrap_or(true);
+            Ok(email_exists || username_exists)
+        }
+        (Some(email), None) => service.user_service.check_email_exist(&email).await,
+        (None, Some(username)) => service.user_service.check_username_exist(&username).await,
+        (None, None) => Ok(true),
+    };
+
     handle_response_by_service(res)
 }

@@ -68,10 +68,23 @@ shutdown-timeout = "default"
 # PostgreSQL database config
 pg-database = { host = "localhost", port = 5432, username = "season", password = "season", db = "marketing_monitor" }
 # Api route auth guard white list
+cors = { allowed_origin = "http://localhost:3000", allowed_methods = [
+    "GET",
+    "POST",
+], allowed_headers = [
+    "Content-Type",
+    "Accept",
+    "Authorization"
+], allowed_header = [
+    "Content-Type",
+    "Accept",
+    "Authorization"
+], max_age = 3600 }
 route_whites = [
     "/api/v1/auth/login",
     "/api/v1/auth/register",
     "/api/v1/auth/forget",
     "/api/v1/auth/forget_send_email",
     "/api/v1/auth/forget_verify_code",
+    "/api/v1/auth/check",
 ]
