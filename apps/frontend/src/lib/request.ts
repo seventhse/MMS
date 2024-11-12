@@ -1,4 +1,9 @@
 'use server'
+
+import { redirect } from 'next/navigation'
+import { Routes } from '~/constants/routes'
+import { getSession } from './session'
+
 // eslint-disable-next-line node/prefer-global/process
 const BASE_URL = process.env.BASE_API_URL || 'http://127.0.0.1:10086/api/v1'
 
@@ -11,6 +16,8 @@ export interface BaseResponse<T> {
   code: number
   message: null | string
   data: T | null
+  isError?: boolean
+  error?: Error
 }
 
 function paramsToString(params: RequestData<string>) {
@@ -38,12 +45,18 @@ export async function request<T = any>(
   const isGet = method?.toUpperCase() === 'GET'
   url = composeUrl(url, isGet ? requestData : undefined)
 
-  const options: RequestInit = {
+  const session = await getSession()
+
+  const options: RequestInit & { headers: Record<string, string> } = {
     method,
     headers: {
       'Content-Type': 'application/json',
     },
     cache: 'no-store',
+  }
+
+  if (session) {
+    options.headers.Authorization = `Bearer ${session}`
   }
 
   if (!isGet) {
@@ -55,7 +68,16 @@ export async function request<T = any>(
   const responseData = (await res.json()) as unknown as BaseResponse<T>
 
   if (responseData.code !== 200) {
-    Promise.reject(responseData.message)
+    if (requestData.code === 401) {
+      redirect(Routes.LOGIN)
+    }
+
+    // Promise.reject(responseData.message)
+    return {
+      ...responseData,
+      isError: true,
+      error: new Error(responseData.message || ''),
+    }
   }
 
   return responseData
@@ -65,6 +87,6 @@ export async function get<T = any>(url: string, params?: RequestData<string>): P
   return request<T>('GET', url, params)
 }
 
-export async function post<T = any>(url: string, data: any): Promise<BaseResponse<T>> {
+export async function post<T = any>(url: string, data?: any): Promise<BaseResponse<T>> {
   return request<T>('POST', url, data)
 }

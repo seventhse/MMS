@@ -31,7 +31,11 @@ export function LoginForm() {
   })
 
   async function onSubmit(value: LoginFormSchema) {
-    await singIn(value)
+    await singIn(value).catch((e) => {
+      form.setError('password', {
+        message: e.message,
+      })
+    })
   }
 
   return (

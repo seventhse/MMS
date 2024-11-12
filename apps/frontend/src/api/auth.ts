@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { Status } from '~/constants/enum'
 import { get, post } from '~/lib/request'
 
 export const registerFormSchema = z.object({
@@ -56,6 +57,27 @@ export interface CheckPayload {
   value: string
 }
 
+export interface UserInfo {
+  userId: string // UUID in Rust, string in TypeScript
+  uniqueId: string
+  email: string
+  username?: string | null // Optional field
+  displayName?: string | null // Optional field
+  avatar?: string | null // Optional field
+  defaultTeamId?: string | null // UUID in Rust, string in TypeScript
+  status: Status // Enum mapping to Rust's `Status`
+  createdAt?: string | null // String representation of date, formatted
+  updatedAt?: string | null // String representation of date, formatted
+}
+
+export interface UpdateUserInfoPayload {
+  email?: string | null
+  username?: string | null
+  avatar?: string | null
+  displayName?: string | null
+  defaultTeamId?: string | null
+}
+
 export async function register(data: RegisterFormSchema) {
   return await post<AuthResponse>('/auth/register', data)
 }
@@ -82,4 +104,16 @@ export async function checkUsernameExists(username: string) {
 
 export async function login(data: LoginFormSchema) {
   return await post<AuthResponse>('/auth/login', data)
+}
+
+export async function resetToken() {
+  return await get<AuthResponse>('/auth/reset-token')
+}
+
+export async function getUserInfo() {
+  return await get<UserInfo>('/auth/info')
+}
+
+export async function updateUserInfo(data: UpdateUserInfoPayload) {
+  return await post('/auth/update-info', data)
 }

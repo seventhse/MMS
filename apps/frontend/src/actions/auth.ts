@@ -16,13 +16,14 @@ export async function signUp(data: RegisterFormSchema) {
 
 export async function singIn(data: LoginFormSchema) {
   const res = await login(data)
-  if (res.data) {
-    await createSession(res.data)
-    redirect(Routes.DASHBOARD)
+  if (res.isError) {
+    throw res.error
   }
+  await createSession(res.data!)
+  redirect(Routes.DASHBOARD)
 }
 
-export async function logout() {
+export async function signOut() {
   await removeSession()
   redirect(Routes.LOGIN)
 }
