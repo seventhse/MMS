@@ -1,4 +1,4 @@
-import "@mms/ui/global.css"
+import '@mms/ui/global.css'
 
 export default function RootLayout({
   children,
@@ -7,7 +7,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="w-full max-w-screen min-h-screen max-h-screen">
+        {children}
+      </body>
     </html>
   )
 }

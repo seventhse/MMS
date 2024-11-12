@@ -14,15 +14,18 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "@mms/ui": "workspace:^",
     "@mms/utils": "workspace:^",
     "next": "^15.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@mms/configs": "workspace:^",
+    "@types/node": "^22.9.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.14.0",
     "postcss": "^8.4.47",

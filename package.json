@@ -1,14 +1,18 @@
 {
-	"devDependencies": {
-		"@mms/configs": "workspace:^",
-		"@types/react": "^18.3.12",
-		"@types/react-dom": "^18.3.1",
-		"eslint": "^9.14.0",
-		"tailwindcss": "^3.4.14",
-		"typescript": "^5.6.3"
-	},
-	"dependencies": {
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
-	}
+  "scripts": {
+    "postinstall": "lefthook install"
+  },
+  "devDependencies": {
+    "@mms/configs": "workspace:^",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^9.14.0",
+    "lefthook": "^1.8.2",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
 }
