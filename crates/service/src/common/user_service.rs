@@ -35,6 +35,13 @@ pub struct VerifyUserModel {
     pub password: String,
 }
 
+#[derive(Debug, FromQueryResult, DerivePartialModel, Serialize)]
+#[sea_orm(entity = "Users")]
+pub struct CheckUserModel {
+    pub email: Option<String>,
+    pub username: Option<String>,
+}
+
 pub type ModelResult = DbResult<users::Model>;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -86,12 +93,22 @@ impl UserService {
     }
 
     pub async fn check_email_exist(&self, email: &str) -> DbResult<bool> {
-        Ok(self.find_user_by_email(email).await?.is_some())
+        Ok(Users::find()
+            .select_only()
+            .column(users::Column::Email)
+            .filter(users::Column::Email.eq(email))
+            .into_model::<CheckUserModel>()
+            .one(self.db.as_ref())
+            .await?
+            .is_some())
     }
 
     pub async fn check_username_exist(&self, username: &str) -> DbResult<bool> {
         Ok(Users::find()
+            .select_only()
+            .column(users::Column::Username)
             .filter(users::Column::Username.eq(username))
+            .into_model::<CheckUserModel>()
             .one(self.db.as_ref())
             .await?
             .is_some())
@@ -238,8 +255,9 @@ impl UserService {
 
         let start = Instant::now();
         log::info!("Verify Password Start processing...");
-        if PassVerify::verify_password(password, &user.password).is_err() {
-            return Err(DbErr::Custom("Invalid password".to_string()));
+
+        if PassVerify::verify_password(password, &user.password).unwrap() == false {
+            return Err(DbErr::Custom("Incorrect password. You can try again or choose to reset your password.".to_string()));
         }
 
         let duration = start.elapsed();

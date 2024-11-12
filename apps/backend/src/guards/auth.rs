@@ -37,7 +37,7 @@ pub async fn bearer_validator(
         }
         None => {
             if let Some(settings) = req.app_data::<actix_web::web::Data<AppSettings>>() {
-                let uri = req.uri().to_string();
+                let uri = req.path().to_string();
                 log::info!("Check uri: {} is not validator authorized", &uri);
                 let route_white = settings
                     .application
