@@ -65,6 +65,7 @@ shutdown-timeout = "default"
 # The `application` table be used to express application-specific settings.
 # See the `README.md` file for more details on how to use this.
 [application]
+token = { expire = 604800, secret = "Some-secret" }
 # PostgreSQL database config
 pg-database = { host = "localhost", port = 5432, username = "season", password = "season", db = "marketing_monitor" }
 # Api route auth guard white list
@@ -74,11 +75,11 @@ cors = { allowed_origin = "http://localhost:3000", allowed_methods = [
 ], allowed_headers = [
     "Content-Type",
     "Accept",
-    "Authorization"
+    "Authorization",
 ], allowed_header = [
     "Content-Type",
     "Accept",
-    "Authorization"
+    "Authorization",
 ], max_age = 3600 }
 route_whites = [
     "/api/v1/auth/login",
