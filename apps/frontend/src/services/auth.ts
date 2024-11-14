@@ -78,10 +78,6 @@ export interface UpdateUserInfoPayload {
   defaultTeamId?: string | null
 }
 
-export async function register(data: RegisterFormSchema) {
-  return await post<AuthResponse>('/auth/register', data)
-}
-
 export async function check(payload: CheckPayload) {
   return await get<boolean>('/auth/check', {
     [payload.key]: payload.value,
@@ -102,6 +98,10 @@ export async function checkUsernameExists(username: string) {
   })
 }
 
+export async function register(data: RegisterFormSchema) {
+  return await post<AuthResponse>('/auth/register', data)
+}
+
 export async function login(data: LoginFormSchema) {
   return await post<AuthResponse>('/auth/login', data)
 }
@@ -116,4 +116,8 @@ export async function getUserInfo() {
 
 export async function updateUserInfo(data: UpdateUserInfoPayload) {
   return await post('/auth/update-info', data)
+}
+
+export async function getProjects() {
+  return await get('/auth/projects')
 }

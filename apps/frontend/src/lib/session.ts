@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
-import { getUserInfo, resetToken } from '~/api/auth'
-import type { AuthResponse, UserInfo } from '~/api/auth'
+import { getUserInfo, resetToken } from '~/services/auth'
+import type { AuthResponse, UserInfo } from '~/services/auth'
 import 'server-only'
 
 const SESSION_KEY = 'SESSION_KEY'

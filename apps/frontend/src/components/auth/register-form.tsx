@@ -17,7 +17,7 @@ import { signUp } from '~/actions/auth'
 import {
   registerFormSchema,
   type RegisterFormSchema,
-} from '~/api/auth'
+} from '~/services/auth'
 
 function RegisterFrom() {
   const form = useForm<RegisterFormSchema>({
