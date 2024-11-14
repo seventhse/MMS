@@ -30,3 +30,25 @@ pub enum TargetTypes {
     #[sea_orm(string_value = "user")]
     User,
 }
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "team_user_roles")]
+pub enum TeamUserRoles {
+    #[sea_orm(string_value = "Admin")]
+    Admin,
+    #[sea_orm(string_value = "Guest")]
+    Guest,
+    #[sea_orm(string_value = "Manager")]
+    Manager,
+    #[sea_orm(string_value = "Member")]
+    Member,
+    #[sea_orm(string_value = "Owner")]
+    Owner,
+}
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "team_user_status")]
+pub enum TeamUserStatus {
+    #[sea_orm(string_value = "joined")]
+    Joined,
+    #[sea_orm(string_value = "lefted")]
+    Lefted,
+}

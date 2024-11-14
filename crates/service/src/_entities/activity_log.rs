@@ -5,7 +5,7 @@ use super::sea_orm_active_enums::TargetTypes;
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(schema_name = "mm_auth", table_name = "activity_log")]
+#[sea_orm(table_name = "activity_log")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub log_id: Uuid,

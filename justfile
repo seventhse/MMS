@@ -49,8 +49,8 @@ gen-migration table:
 
 gen-entity:
     just clean-entity
-    sea-orm-cli generate entity -u {{pg_url}} -s mm_auth -o {{entity_dir}}
+    sea-orm-cli generate entity -u {{pg_url}} -o {{entity_dir}}
 
 migrate command:
-    sea-orm-cli migrate {{command}} -u {{pg_url}} -s mm_auth -d {{migration_dir}}
+    sea-orm-cli migrate {{command}} -u {{pg_url}} -d {{migration_dir}}
     just gen-entity
