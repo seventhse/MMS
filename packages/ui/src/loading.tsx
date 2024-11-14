@@ -42,7 +42,7 @@ export function Loading({ loading, asChild, children, text = 'loading...', maskC
   const Comp = asChild ? Slot : 'div'
 
   return (
-    <Comp {...restProps} className={cn('relative', restProps.className)}>
+    <Comp {...restProps} className={cn('relative size-full', restProps.className)}>
       {children}
       {
         loading && (
