@@ -18,8 +18,9 @@ pub(crate) fn init_routes(cfg: &mut web::ServiceConfig) {
             .service(login)
             .service(register)
             .service(forget)
-            .service(info)
             .service(logout)
+            .service(info)
+            .service(teams)
             .service(reset_token)
             .service(update_info)
             .service(check),
@@ -58,7 +59,7 @@ async fn register(
     handle_response_by_service(res)
 }
 
-#[get("/logout")]
+#[post("/logout")]
 async fn logout(service: web::Data<Arc<Service>>) -> impl Responder {
     service.auth_service.logout().await;
     ApiResponse::<Empty>::ok(Some("Logout successful!"))
@@ -75,6 +76,23 @@ async fn reset_token(service: web::Data<Arc<Service>>, token: BearerAuth) -> imp
 async fn info(service: web::Data<Arc<Service>>, token: BearerAuth) -> impl Responder {
     let token_str = token.token();
     let res = service.auth_service.get_user_info_by_token(token_str).await;
+    handle_response_by_service(res)
+}
+
+#[get("/teams")]
+async fn teams(service: web::Data<Arc<Service>>, token: BearerAuth) -> impl Responder {
+    let token_str = token.token();
+    let user_id = service
+        .auth_service
+        .get_user_id_by_token(token_str)
+        .await
+        .unwrap();
+
+    let res = service
+        .team_user_service
+        .find_teams_by_user(user_id)
+        .await;
+
     handle_response_by_service(res)
 }
 
