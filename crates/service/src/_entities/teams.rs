@@ -10,7 +10,6 @@ pub struct Model {
     pub team_unique_id: String,
     pub team_name: String,
     pub team_avatar: Option<String>,
-    #[sea_orm(unique)]
     pub team_namespace: String,
     pub description: Option<String>,
     pub created_at: DateTime,

@@ -13,23 +13,30 @@ use std::time::Instant;
 #[derive(FromQueryResult, DerivePartialModel, Serialize)]
 #[sea_orm(entity = "Users")]
 pub struct PartialUser {
+    #[serde(rename = "userId")]
     pub user_id: Uuid,
+    #[serde(rename = "uniqueId")]
     pub unique_id: String,
     pub email: String,
     pub username: Option<String>,
+    #[serde(rename = "displayName")]
     pub display_name: Option<String>,
     pub avatar: Option<String>,
+    #[serde(rename = "defaultTeamId")]
     pub default_team_id: Option<Uuid>,
     pub status: Status,
     #[sea_orm(from_expr = "Expr::cust(\"to_char(users.created_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    #[serde(rename = "createdAt")]
     pub created_at: Option<String>,
     #[sea_orm(from_expr = "Expr::cust(\"to_char(users.updated_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    #[serde(rename = "updatedAt")]
     pub updated_at: Option<String>,
 }
 
 #[derive(Debug, FromQueryResult, DerivePartialModel, Serialize)]
 #[sea_orm(entity = "Users")]
 pub struct VerifyUserModel {
+    #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub email: String,
     pub password: String,
@@ -50,6 +57,7 @@ pub struct CreateUserDto {
     pub password: String,
     pub username: String,
     pub avatar: Option<String>,
+    #[serde(rename = "displayName")]
     pub display_name: Option<String>,
 }
 
@@ -58,7 +66,9 @@ pub struct UpdateUserDto {
     pub email: Option<String>,
     pub username: Option<String>,
     pub avatar: Option<String>,
+    #[serde(rename = "displayName")]
     pub display_name: Option<String>,
+    #[serde(rename = "defaultTeamId")]
     pub default_team_id: Option<Uuid>,
 }
 

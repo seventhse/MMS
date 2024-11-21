@@ -13,30 +13,43 @@ use serde::{Deserialize, Serialize};
 #[derive(FromQueryResult, DerivePartialModel, Serialize)]
 #[sea_orm(entity = "Teams")]
 pub struct FormatTeam {
+    #[serde(rename = "teamId")]
     pub team_id: Uuid,
+    #[serde(rename = "teamUniqueId")]
     pub team_unique_id: String,
+    #[serde(rename = "teamName")]
     pub team_name: String,
+    #[serde(rename = "teamAvatar")]
     pub team_avatar: Option<String>,
+    #[serde(rename = "teamNamespace")]
     pub team_namespace: String,
     pub description: Option<String>,
     #[sea_orm(from_expr = "Expr::cust(\"to_char(teams.created_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    #[serde(rename = "createdAt")]
     pub created_at: Option<String>,
     #[sea_orm(from_expr = "Expr::cust(\"to_char(teams.updated_at, 'YYYY-MM-DD HH:mm:ss')\")")]
+    #[serde(rename = "updatedAt")]
     pub updated_at: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CreateTeamDto {
+    #[serde(rename = "teamName")]
     pub team_name: String,
+    #[serde(rename = "teamNamespace")]
     pub team_namespace: String,
+    #[serde(rename = "teamAvatar")]
     pub team_avatar: Option<String>,
     pub description: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateTeamDto {
+    #[serde(rename = "teamName")]
     pub team_name: Option<String>,
+    #[serde(rename = "teamNamespace")]
     pub team_namespace: Option<String>,
+    #[serde(rename = "teamAvatar")]
     pub team_avatar: Option<String>,
     pub description: Option<String>,
 }
@@ -48,17 +61,6 @@ pub struct TeamService {
 impl TeamService {
     pub fn new(db: Arc<DatabaseConnection>) -> TeamService {
         Self { db }
-    }
-
-    pub async fn check_namespace_exists(&self, namespace: &str) -> DbResult<bool> {
-        let existing_team = Teams::find()
-            .select_only()
-            .columns([teams::Column::TeamNamespace])
-            .filter(teams::Column::TeamNamespace.eq(namespace))
-            .one(self.db.as_ref())
-            .await?;
-
-        Ok(existing_team.is_some())
     }
 
     pub async fn find_project_all(&self) -> DbResult<Vec<FormatTeam>> {
@@ -82,17 +84,6 @@ impl TeamService {
 
         if form_data.team_namespace.trim().is_empty() {
             return Err(DbErr::Custom("Team namespace cannot be empty".to_string()));
-        }
-
-        let existing_team = Teams::find()
-            .filter(teams::Column::TeamNamespace.eq(&form_data.team_namespace))
-            .one(self.db.as_ref())
-            .await?;
-
-        if existing_team.is_some() {
-            return Err(DbErr::Custom(
-                "Team with this namespace already exists".to_string(),
-            ));
         }
 
         teams::ActiveModel {

@@ -7,6 +7,7 @@ use service::{
     common::{
         team_service::{CreateTeamDto, UpdateTeamDto},
         team_user_service::{JoinTeamDto, LeftTeamDto},
+        user_service::UpdateUserDto,
     },
     sea_orm::{sqlx::types::Uuid, TryIntoModel},
     Service,
@@ -48,18 +49,6 @@ async fn get_users(service: web::Data<Arc<Service>>, id: web::Path<Uuid>) -> imp
     handle_response_by_service(res)
 }
 
-#[get("/check/namespace/{namespace}")]
-async fn check_namespace(
-    service: web::Data<Arc<Service>>,
-    namespace: web::Path<String>,
-) -> impl Responder {
-    let res = service
-        .team_service
-        .check_namespace_exists(namespace.as_str())
-        .await;
-    handle_response_by_service(res)
-}
-
 #[post("/create")]
 async fn create_team(
     service: web::Data<Arc<Service>>,
@@ -69,12 +58,13 @@ async fn create_team(
     let form = form.into_inner();
     let token_str = token.token();
 
-    let user_id = service
+    let user_info = service
         .auth_service
-        .get_user_id_by_token(token_str)
+        .get_user_info_by_token(token_str)
         .await
         .unwrap();
 
+    log::info!("Create team form data: {:#?}", form);
     let res = service.team_service.create_team(form).await;
 
     match res {
@@ -83,9 +73,26 @@ async fn create_team(
 
             let payload = JoinTeamDto {
                 team_id: team.team_id,
-                user_id,
+                user_id: user_info.user_id,
                 role: TeamUserRoles::Owner,
             };
+
+            if user_info.default_team_id.is_none() {
+                service
+                    .user_service
+                    .update_user_by_id(
+                        user_info.user_id,
+                        UpdateUserDto {
+                            username: None,
+                            display_name: None,
+                            email: None,
+                            avatar: None,
+                            default_team_id: Some(team.team_id),
+                        },
+                    )
+                    .await
+                    .unwrap();
+            }
 
             if let Err(e) = service.team_user_service.join_team(payload).await {
                 return ApiResponse::<Empty>::bad_request(Some(&e.to_string()));

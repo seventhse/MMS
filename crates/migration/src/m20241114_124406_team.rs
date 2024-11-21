@@ -34,7 +34,7 @@ impl MigrationTrait for Migration {
                     .col(string(Teams::TeamUniqueId).not_null())
                     .col(string(Teams::TeamName).not_null().comment("Team name"))
                     .col(string_null(Teams::TeamAvatar).comment("Team avatar"))
-                    .col(string(Teams::TeamNamespace).unique_key().not_null())
+                    .col(string(Teams::TeamNamespace).not_null())
                     .col(string_null(Teams::Description).comment("Team description"))
                     .col(
                         date_time(Teams::CreatedAt)
