@@ -8,10 +8,17 @@ export enum AuthGuardRoutes {
   TEAM = '/team',
 }
 
-export const SignInRoute = AuthGuardRoutes.TEAM
+export enum TeamRoutes {
+  DASHBOARD = '/dashboard',
+  SETTING_PROFILE = '/setting/profile',
+  SETTING_MEMBER = '/setting/member',
+}
+
+export const SignInRoute = '/'
 export const SignOutRoute = AuthRoutes.LOGIN
 
 export const Routes = {
   ...AuthRoutes,
   ...AuthGuardRoutes,
+  ...TeamRoutes,
 } as const

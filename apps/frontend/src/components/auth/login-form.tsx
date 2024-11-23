@@ -15,7 +15,7 @@ import {
   useForm,
 } from '@mms/ui'
 import Link from 'next/link'
-import { singIn } from '~/actions/auth'
+import { singInAction } from '~/actions/auth'
 import { Routes } from '~/constants/routes'
 import { useFetch } from '~/hooks/use-fetch'
 import type { LoginFormSchema } from '~/services/auth'
@@ -34,24 +34,12 @@ export function LoginForm() {
     },
   })
 
-  const { isLoading, action } = useFetch(singIn, {
-    onError: (e) => {
-      if (e.message) {
-        form.setError('password', {
-          message: e.message,
-        })
-      }
-    },
-  })
-
-  async function onSubmit(value: LoginFormSchema) {
-    await action(value)
-  }
+  const { isLoading, action } = useFetch(singInAction)
 
   return (
     <Form {...form}>
       <Loading loading={isLoading} text="In validation info...">
-        <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-3" onSubmit={form.handleSubmit(action)}>
           <FormField
             control={form.control}
             name="email"

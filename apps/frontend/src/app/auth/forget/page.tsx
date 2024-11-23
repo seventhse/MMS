@@ -1,9 +1,17 @@
 import { Button, Input, Label } from '@mms/ui'
+import { Back } from '~/components/common/back'
+
+export const metadata = {
+  title: 'Forget - mms',
+}
 
 export default function ForgetPage() {
   return (
     <>
-      <h3 className="text-2xl mb-6">Forget Password?</h3>
+      <h3 className="text-2xl mb-6 flex items-center gap-x-1">
+        <Back />
+        Forget Password?
+      </h3>
 
       <div className="my-6">
         <p className="text-left text-sm">

@@ -1,8 +1,8 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { getToken } from '~/actions/cache'
 import { Routes } from '~/constants/routes'
-import { getSession } from './session'
 
 // eslint-disable-next-line node/prefer-global/process
 const BASE_URL = process.env.BASE_API_URL || 'http://127.0.0.1:10086/api/v1'
@@ -45,7 +45,7 @@ export async function request<T = any>(
   const isGet = method?.toUpperCase() === 'GET'
   url = composeUrl(url, isGet ? requestData : undefined)
 
-  const session = await getSession()
+  const token = await getToken()
 
   const options: RequestInit & { headers: Record<string, string> } = {
     method,
@@ -55,8 +55,8 @@ export async function request<T = any>(
     cache: 'no-store',
   }
 
-  if (session) {
-    options.headers.Authorization = `Bearer ${session}`
+  if (token) {
+    options.headers.Authorization = `Bearer ${token}`
   }
 
   if (!isGet) {
@@ -68,7 +68,7 @@ export async function request<T = any>(
   const responseData = (await res.json()) as unknown as BaseResponse<T>
 
   if (responseData.code !== 200) {
-    if (requestData.code === 401) {
+    if (responseData.code === 401) {
       redirect(Routes.LOGIN)
     }
 

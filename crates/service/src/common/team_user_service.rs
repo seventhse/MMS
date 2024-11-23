@@ -54,39 +54,53 @@ pub struct TeamUserService {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LeftTeamDto {
+    #[serde(rename = "teamId")]
     pub team_id: Uuid,
+    #[serde(rename = "userId")]
     pub user_id: Uuid,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JoinTeamDto {
+    #[serde(rename = "teamId")]
     pub team_id: Uuid,
+    #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub role: TeamUserRoles,
 }
 
 #[derive(Debug, Serialize, Deserialize, FromQueryResult)]
 pub struct TeamOfUser {
+    #[serde(rename = "teamId")]
     pub team_id: Uuid,
+    #[serde(rename = "teamName")]
     pub team_name: String,
+    #[serde(rename = "teamAvatar")]
     pub team_avatar: String,
+    #[serde(rename = "teamUniqueId")]
     pub team_unique_id: String,
+    #[serde(rename = "teamNamespace")]
     pub team_namespace: String,
     pub description: String,
     pub role: TeamUserRoles,
+    #[serde(rename = "joinedAt")]
     pub joined_at: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, FromQueryResult)]
 pub struct UserOfTeam {
+    #[serde(rename = "userId")]
     pub user_id: Uuid,
     pub username: String,
+    #[serde(rename = "displayName")]
     pub display_name: Option<String>,
     pub email: String,
     pub avatar: Option<String>,
     pub role: TeamUserRoles,
     pub status: TeamUserStatus,
+    #[serde(rename = "joinedAt")]
     pub joined_at: String,
+    #[serde(rename = "leftedAt")]
     pub lefted_at: Option<String>,
 }
 

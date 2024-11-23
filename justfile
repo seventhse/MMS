@@ -36,6 +36,8 @@ web-dev:
     pnpm -F frontend dev
 web-build:
     pnpm -F frontend build
+web-start:
+    pnpm -F frontend start
 lint:
     pnpm -F "@mms/*" lint
 lint-fix:
