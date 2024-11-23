@@ -1,29 +1,61 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import type { LoginFormSchema, RegisterFormSchema } from '~/api/auth'
-import { login, register } from '~/api/auth'
-import { Routes } from '~/constants/routes'
-import { createSession, removeSession } from '~/lib/session'
+import { SignInRoute, SignOutRoute } from '~/constants/routes'
+import type { AuthResponse, LoginFormSchema, RegisterFormSchema } from '~/services/auth'
+import { getTeamsByUser, getUserInfo, login, register } from '~/services/auth'
+import { clearSession, setToken, setUserInfo, setUserTeams } from './cache'
 
-export async function signUp(data: RegisterFormSchema) {
-  const res = await register(data)
-  if (res.data) {
-    await createSession(res.data)
-    redirect(Routes.DASHBOARD)
-  }
-}
+export async function refreshUserInfoAction() {
+  const res = await getUserInfo()
 
-export async function singIn(data: LoginFormSchema) {
-  const res = await login(data)
   if (res.isError) {
     throw res.error
   }
-  await createSession(res.data!)
-  redirect(Routes.DASHBOARD)
+
+  await setUserInfo(res.data!)
 }
 
-export async function signOut() {
-  await removeSession()
-  redirect(Routes.LOGIN)
+export async function refreshUserTeamsAction() {
+  const res = await getTeamsByUser()
+
+  if (res.isError) {
+    throw res.error
+  }
+
+  await setUserTeams(res.data!)
+}
+
+export async function setAuthInfoAction(data: AuthResponse) {
+  await setToken(data!)
+  await refreshUserTeamsAction()
+  await refreshUserInfoAction()
+  redirect(SignInRoute)
+}
+
+export async function signUpAction(data: RegisterFormSchema) {
+  const res = await register(data)
+  if (res.isError) {
+    throw res.error
+  }
+  await setAuthInfoAction(res.data!)
+}
+
+export async function singInAction(data: LoginFormSchema) {
+  const res = await login(data)
+
+  if (res.isError) {
+    throw res.error
+  }
+  await setAuthInfoAction(res.data!)
+}
+
+export async function signOutAction() {
+  try {
+    await clearSession()
+  }
+  catch (e) {
+    console.error('logout error: ', e)
+  }
+  redirect(SignOutRoute)
 }

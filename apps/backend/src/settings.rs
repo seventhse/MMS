@@ -37,7 +37,7 @@ pub struct Cors {
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize)]
 pub struct Token {
     pub secret: String,
-    pub exipre: i64,
+    pub expire: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize)]
@@ -59,12 +59,12 @@ pub fn init_settings() -> std::io::Result<AppSettings> {
 
     let token = settings.application.token.clone().unwrap_or_else(|| Token {
         secret: "some-secret".to_string(),
-        exipre: 1000 * 60 * 10,
+        expire: 1000 * 60 * 60,
     });
 
     unsafe {
         set_var("JWT_SECRET", token.secret);
-        set_var("JWT_EXIPRE", token.exipre.to_string());
+        set_var("JWT_EXIPRE", token.expire.to_string());
         set_var(
             "RUST_LOG",
             match &settings.actix.mode {

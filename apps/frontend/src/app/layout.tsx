@@ -1,4 +1,10 @@
+import { Loading } from '@mms/ui'
+import { Suspense } from 'react'
 import '@mms/ui/global.css'
+
+export const metadata = {
+  title: 'MMS',
+}
 
 export default function RootLayout({
   children,
@@ -7,8 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="w-full max-w-screen min-h-screen max-h-screen">
-        {children}
+      <body className="w-full max-w-screen h-screen max-h-screen bg-white dark:bg-black">
+        <Suspense fallback={<Loading loading text="In Load Resource..." />}>
+          {children}
+        </Suspense>
       </body>
     </html>
   )

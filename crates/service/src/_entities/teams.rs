@@ -3,14 +3,13 @@
 use sea_orm::entity::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
-#[sea_orm(schema_name = "mm_auth", table_name = "teams")]
+#[sea_orm(table_name = "teams")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub team_id: Uuid,
     pub team_unique_id: String,
     pub team_name: String,
     pub team_avatar: Option<String>,
-    #[sea_orm(unique)]
     pub team_namespace: String,
     pub description: Option<String>,
     pub created_at: DateTime,

@@ -6,6 +6,10 @@ import Link from 'next/link'
 import RegisterFrom from '~/components/auth/register-form'
 import { Routes } from '~/constants/routes'
 
+export const metadata = {
+  title: 'Register - mms',
+}
+
 export default function RegisterPage() {
   return (
     <>

@@ -6,6 +6,10 @@ import Link from 'next/link'
 import { LoginForm } from '~/components/auth/login-form'
 import { Routes } from '~/constants/routes'
 
+export const metadata = {
+  title: 'Login - mms',
+}
+
 export default function LoginPage() {
   return (
     <>

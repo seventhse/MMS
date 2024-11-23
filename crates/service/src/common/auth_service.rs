@@ -6,6 +6,7 @@ use crate::utils::{
 use super::user_service::{CreateUserDto, PartialUser, UpdateUserDto, UserService};
 use sea_orm::*;
 use serde::{Deserialize, Serialize};
+use sqlx::types::Uuid;
 use std::{env::var, sync::Arc};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -111,6 +112,11 @@ impl AuthService {
             .await?;
 
         Ok(true)
+    }
+
+    pub async fn get_user_id_by_token(&self, token: &str) -> DbResult<Uuid> {
+        let info = Jwt::extract_info(token).unwrap();
+        Ok(info.user_id)
     }
 
     pub async fn get_user_info_by_token(&self, token: &str) -> DbResult<PartialUser> {
