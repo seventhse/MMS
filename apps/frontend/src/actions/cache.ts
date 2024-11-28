@@ -6,8 +6,8 @@ import 'server-only'
 
 export const DEFAULT_SESSION_CONFIG: Partial<ResponseCookie> = {
   httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
+  secure: false,
+  sameSite: 'none',
   path: '/',
 }
 

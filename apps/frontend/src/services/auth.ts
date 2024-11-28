@@ -68,24 +68,19 @@ export const registerFormSchema = z.object({
   email: z.string({
     required_error: 'Email is must input.',
   })
-    .email('Please input a valid email!')
-    .refine(async (val) => {
-      const res = await checkEmailExists(val)
-      return !res.data
-    }, {
-      message: 'The email already exist.',
-    }),
+    .email('Please enter a valid email address')
+    .refine(async (value) => {
+      const exists = await checkEmailExists(value)
+      return !exists?.data
+    }, 'This email address is already registered'),
   username: z.string()
-    .min(1, { message: 'Username is required.' })
-    .max(12, { message: 'Username must be at most 12 characters.' })
-    .refine(async (val) => {
-      const res = await checkUsernameExists(val)
-      return !res.data
-    }, {
-      message: 'The username already exist.',
-    }),
+    .min(1, { message: 'Please enter a username' })
+    .max(12, { message: 'Username cannot exceed 12 characters' })
+    .refine(async (value) => {
+      const exists = await checkUsernameExists(value)
+      return !exists?.data
+    }, 'This username is already taken'),
   password: z.string()
-    .min(1, { message: 'Password is required.' })
     .min(6, { message: 'Password must be at least 6 characters.' })
     .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter.' })
     .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter.' })
@@ -99,15 +94,19 @@ export type RegisterFormSchema = z.infer<typeof registerFormSchema>
  * Schema for login form validation
  */
 export const loginFormSchema = z.object({
-  email: z.string().email('Please enter a valid email address').refine(async (val) => {
-    const res = await checkEmailExists(val)
-    return res.data
-  }, {
-    message: 'This email address does not exist in our system',
-  }),
+  email: z.string({
+    required_error: 'Email is required',
+  })
+    .email('Please enter a valid email address')
+    .refine(async (value) => {
+      const exists = await checkEmailExists(value)
+      return exists?.data
+    }, 'This email address is not registered'),
   password: z.string({
-    required_error: 'Please enter your password',
-  }),
+    required_error: 'Password is required',
+  })
+    .min(1, 'Password cannot be empty')
+    .max(32, 'Password cannot exceed 32 characters'),
 })
 
 export type LoginFormSchema = z.infer<typeof loginFormSchema>

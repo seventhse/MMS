@@ -43,3 +43,20 @@ export function filterMenuByRole(
 
   return filteredMenu
 }
+
+export function findMenuParents(menus: MenuItem[], item: MenuItem) {
+  const parents = []
+  let currentItem = item
+
+  while (currentItem?.parent) {
+    const parentItem = menus.find(menuItem => menuItem.title === currentItem.parent)
+    if (parentItem) {
+      parents.unshift(parentItem)
+      currentItem = parentItem
+    }
+    else {
+      break
+    }
+  }
+  return parents
+}

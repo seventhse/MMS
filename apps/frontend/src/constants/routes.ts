@@ -1,3 +1,5 @@
+export const HEADER_PATH_KEY = 'x-current-path'
+
 export enum AuthRoutes {
   LOGIN = '/auth/login',
   REGISTER = '/auth/register',
@@ -9,9 +11,12 @@ export enum AuthGuardRoutes {
 }
 
 export enum TeamRoutes {
-  DASHBOARD = '/dashboard',
-  SETTING_PROFILE = '/setting/profile',
+  DASHBOARD = '/',
+  SETTING = '/setting',
   SETTING_MEMBER = '/setting/member',
+  SETTING_NOTIFY = '/setting/notify',
+  SETTING_BILL = '/setting/bill',
+  SETTING_LOG = '/setting/log',
 }
 
 export const SignInRoute = '/'
