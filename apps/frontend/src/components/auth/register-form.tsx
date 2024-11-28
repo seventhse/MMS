@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  AlertDestructive,
   Button,
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,9 +14,10 @@ import {
   Loading,
   useForm,
 } from '@mms/ui'
-import { signUpAction } from '~/actions/auth'
+import { setAuthInfoAction } from '~/actions/auth'
 import { useFetch } from '~/hooks/use-fetch'
 import {
+  register,
   registerFormSchema,
   type RegisterFormSchema,
 } from '~/services/auth'
@@ -35,12 +36,17 @@ function RegisterFrom() {
     },
   })
 
-  const { isLoading, action } = useFetch(signUpAction)
+  const { isLoading, action, isError, error } = useFetch(register, {
+    onSuccess: async (data) => {
+      await setAuthInfoAction(data!)
+    },
+  })
 
   return (
     <Form {...form}>
       <Loading loading={isLoading} text="In register...">
         <form className="space-y-3" onSubmit={form.handleSubmit(action)}>
+          <AlertDestructive visible={isError}>{ error }</AlertDestructive>
           <FormField
             control={form.control}
             name="username"
@@ -50,9 +56,6 @@ function RegisterFrom() {
                 <FormControl>
                   <Input placeholder="please input your username" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Choose a username that will identify you on the platform.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -66,9 +69,6 @@ function RegisterFrom() {
                 <FormControl>
                   <Input placeholder="please input your email" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Your email will be used for account verification and recovery.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -82,9 +82,6 @@ function RegisterFrom() {
                 <FormControl>
                   <Input type="password" placeholder="please input your password" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Choose a secure password with at least 6 characters.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

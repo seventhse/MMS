@@ -4,9 +4,11 @@ export const metadata = {
 
 async function TeamDashboard() {
   return (
-    <div>
-      team dashboard
-    </div>
+    <main className="m-6">
+      <h1 className="my-4 text-2xl font-bold text-orange-500">
+        Welcome to Team Dashboard
+      </h1>
+    </main>
   )
 }
 

@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  AlertDestructive,
   Button,
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,11 +15,11 @@ import {
   useForm,
 } from '@mms/ui'
 import Link from 'next/link'
-import { singInAction } from '~/actions/auth'
+import { setAuthInfoAction } from '~/actions/auth'
 import { Routes } from '~/constants/routes'
 import { useFetch } from '~/hooks/use-fetch'
 import type { LoginFormSchema } from '~/services/auth'
-import { loginFormSchema } from '~/services/auth'
+import { login, loginFormSchema } from '~/services/auth'
 
 export function LoginForm() {
   const form = useForm<LoginFormSchema>({
@@ -29,17 +29,20 @@ export function LoginForm() {
     criteriaMode: 'firstError',
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'season.sevent@icloud.com',
+      password: 'Seventhse233.',
     },
   })
 
-  const { isLoading, action } = useFetch(singInAction)
+  const { isLoading, action, isError, error } = useFetch(login, { onSuccess: async (data) => {
+    await setAuthInfoAction(data!)
+  } })
 
   return (
     <Form {...form}>
       <Loading loading={isLoading} text="In validation info...">
         <form className="space-y-3" onSubmit={form.handleSubmit(action)}>
+          <AlertDestructive visible={isError}>{ error }</AlertDestructive>
           <FormField
             control={form.control}
             name="email"
@@ -49,9 +52,6 @@ export function LoginForm() {
                 <FormControl>
                   <Input placeholder="please input your email" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Your email will be used for account verification and recovery.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -68,9 +68,6 @@ export function LoginForm() {
                 <FormControl>
                   <Input type="password" placeholder="please input your password" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Choose a secure password with at least 6 characters.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

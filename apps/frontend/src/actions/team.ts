@@ -24,10 +24,10 @@ export async function refreshTeamInfoAction(teamId?: string) {
 }
 
 export async function createFirstTeamAction(formData: CreateTeamSchema) {
-  const { isError, error } = await createTeam(formData)
+  const res = await createTeam(formData)
 
-  if (isError) {
-    throw error
+  if (res.isError) {
+    return res
   }
 
   await refreshUserTeamsAction()

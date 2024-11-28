@@ -17,15 +17,17 @@ export interface BaseResponse<T> {
   message: null | string
   data: T | null
   isError?: boolean
-  error?: Error
+  error?: string
 }
 
 function paramsToString(params: RequestData<string>) {
   return Object.entries(params).reduce((pre, [key, value]) => {
+    const encodedKey = encodeURIComponent(key)
+    const encodedValue = encodeURIComponent(value)
     if (pre) {
-      return `${pre}&${key}=${value}`
+      return `${pre}&${encodedKey}=${encodedValue}`
     }
-    return `${key}=${value}`
+    return `${encodedKey}=${encodedValue}`
   }, '')
 }
 
@@ -65,6 +67,16 @@ export async function request<T = any>(
 
   const res = await fetch(url, options)
 
+  if (res.status !== 200) {
+    return {
+      code: res.status,
+      message: 'Server error, please try again later',
+      data: null,
+      isError: true,
+      error: 'Server error!',
+    }
+  }
+
   const responseData = (await res.json()) as unknown as BaseResponse<T>
 
   if (responseData.code !== 200) {
@@ -76,7 +88,7 @@ export async function request<T = any>(
     return {
       ...responseData,
       isError: true,
-      error: new Error(responseData.message || ''),
+      error: responseData.message || '',
     }
   }
 

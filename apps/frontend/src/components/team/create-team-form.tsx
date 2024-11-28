@@ -2,10 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
+  AlertDestructive,
   Button,
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,6 +25,8 @@ export interface CreateTeamFormProps {
 }
 
 export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
+  const { isLoading, action, isError, error } = useFetch(createFirstTeamAction)
+
   const form = useForm<CreateTeamSchema>({
     mode: 'onBlur',
     reValidateMode: 'onBlur',
@@ -39,12 +41,11 @@ export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
     },
   })
 
-  const { isLoading, action } = useFetch(createFirstTeamAction)
-
   return (
     <Form {...form}>
       <Loading loading={isLoading}>
         <form className="space-y-3" onSubmit={form.handleSubmit(action)}>
+          <AlertDestructive visible={isError}>{error}</AlertDestructive>
           <FormField
             control={form.control}
             name="teamName"
@@ -54,7 +55,6 @@ export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
                 <FormControl>
                   <Input placeholder="Enter team name" {...field} />
                 </FormControl>
-                <FormDescription>Enter the display name for your team</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -68,7 +68,6 @@ export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
                 <FormControl>
                   <Input placeholder="Enter team namespace" {...field} />
                 </FormControl>
-                <FormDescription>A unique identifier for your team, used in URLs</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -82,7 +81,6 @@ export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
                 <FormControl>
                   <Input placeholder="Enter avatar URL" {...field} />
                 </FormControl>
-                <FormDescription>URL to an image that will represent your team</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -96,14 +94,13 @@ export function CreateTeamForm({ userInfo }: CreateTeamFormProps) {
                 <FormControl>
                   <Input placeholder="Enter team description" {...field} />
                 </FormControl>
-                <FormDescription>A brief description of your team and its purpose</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
 
           <Button className="w-full" type="submit">
-            Create Your Team
+            Create Team
           </Button>
         </form>
       </Loading>

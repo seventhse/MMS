@@ -27,7 +27,7 @@ export interface NavTeamsProps {
 
 export function NavMenus({ label, items }: NavTeamsProps) {
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden" suppressHydrationWarning>
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map(item => (
@@ -73,3 +73,5 @@ export function NavMenus({ label, items }: NavTeamsProps) {
     </SidebarGroup>
   )
 }
+
+export default NavMenus
